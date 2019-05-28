@@ -42,7 +42,9 @@ def bwd_pass(output, y, res_1, ip_1):
     grad_W_2 = np.dot(np.expand_dims(grad_pre_output, axis=1), np.expand_dims(res_1, axis=0))
     grad_b2 = grad_pre_output
 
-    print(np.dot(grad_W_2, np.expand_dims(ip_1, axis=0).T))
+    # print(np.dot(grad_W_2, np.expand_dims(ip_1, axis=0).T))
+
+    print("Test commit")
     # grad_W_1 = np.dot
     # grad_b1 =
 
