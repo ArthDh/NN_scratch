@@ -2,7 +2,7 @@ import numpy as np
 from preprocess import *
 np.random.seed(13)
 
-n_hidden_units_1 = 10
+n_hidden_units_1 = 100
 n_output_units = 2
 
 
@@ -14,17 +14,19 @@ def d_sigmoid(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
 
-def train(X, y, lr=0.001, epochs=5000):
+def train(X, y, lr=0.01, epochs=250):
 
     W_1 = np.random.random((X.shape[-1], n_hidden_units_1))
     b1 = np.zeros((n_hidden_units_1))
     W_2 = np.random.random((n_hidden_units_1, n_output_units))
     b2 = np.zeros((n_output_units))
-    lamda = 0.2
+    lamda = 0.5
 
     # print(W_1)
 
     for epoch in range(epochs):
+        print("Running Epoch:", epoch)
+        loss = 0
         for i, x in enumerate(X):
             # FWD Pass
             res_1 = np.dot(W_1.T, x) + b1
@@ -36,6 +38,7 @@ def train(X, y, lr=0.001, epochs=5000):
 
             # BWD Pass
             grad_pre_output = -(y[i] - output_activation)
+            loss += grad_pre_output
             grad_W_2 = np.dot(np.expand_dims(res_1_activation, axis=1), np.expand_dims(grad_pre_output, 1).T)
             grad_b2 = np.expand_dims(grad_pre_output, 1)
 
@@ -44,8 +47,8 @@ def train(X, y, lr=0.001, epochs=5000):
             grad_W_1 = np.dot(np.expand_dims(x, axis=1), grad_pre_1)
             grad_b1 = grad_pre_1.T
 
-            W_1 = np.subtract(W_1, lr * ((grad_W_1) - lamda * W_1))
-            W_2 = np.subtract(W_2, lr * ((grad_W_2) - lamda * W_2))
+            W_1 = np.subtract(W_1, lr * (grad_W_1))
+            W_2 = np.subtract(W_2, lr * (grad_W_2))
             b1 = np.subtract(b1, np.reshape(grad_b1, (grad_b1.shape[0],)))
             b2 = np.subtract(b2, np.reshape(grad_b2, (grad_b2.shape[0],)))
 
@@ -66,37 +69,37 @@ def predict(x, model):
 
 if __name__ == '__main__':
 
-    train_X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-    train_label = np.array([[1, 0], [1, 0], [0, 1], [0, 1]])
-    test_X = []
-    test_label = []
+    # train_X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    # train_label = np.array([[1, 0], [1, 0], [0, 1], [0, 1]])
+    # test_X = []
+    # test_label = []
 
-    # train_data_path = '/Users/arth/Desktop/Programming/AI_Rutgers/Final_project/data/facedata/facedatatrain'
-    # train_labels_path = '/Users/arth/Desktop/Programming/AI_Rutgers/Final_project/data/facedata/facedatatrainlabels'
+    train_data_path = '/Users/arth/Desktop/Programming/AI_Rutgers/Final_project/data/facedata/facedatatrain'
+    train_labels_path = '/Users/arth/Desktop/Programming/AI_Rutgers/Final_project/data/facedata/facedatatrainlabels'
 
-    # # Number of samples in the dataset
-    # n_samples_train = 10
-    # n_samples_val = 301
-    # n_samples_test = 150
-    # min_value = 0.1
+    # Number of samples in the dataset
+    n_samples_train = 200
+    n_samples_val = 301
+    n_samples_test = 150
+    min_value = 0.1
 
-    # # Face image dataset shape
-    # img_shape = (60, 70)
+    # Face image dataset shape
+    img_shape = (60, 70)
 
-    # X_train, Y_train = getDataLabels(train_data_path, train_labels_path, n_samples_train, img_shape=img_shape)
+    X_train, Y_train = getDataLabels(train_data_path, train_labels_path, n_samples_train, img_shape=img_shape)
 
-    # X_train_np = np.array(X_train)
-    # Y_train_np = np.array(Y_train)
+    X_train_np = np.array(X_train)
+    Y_train_np = np.array(Y_train)
 
-    # Y_train_np_new = []
-    # for y in Y_train_np:
-    #     if y == 0:
-    #         Y_train_np_new.append(np.array([0, 1]))
-    #     else:
-    #         Y_train_np_new.append(np.array([1, 0]))
+    Y_train_np_new = []
+    for y in Y_train_np:
+        if y == 0:
+            Y_train_np_new.append(np.array([0, 1]))
+        else:
+            Y_train_np_new.append(np.array([1, 0]))
 
-    model = train(train_X, train_label)
+    model = train(X_train_np, Y_train_np_new)
 
-    for i in range(4):
-        predict(train_X[i], model)
-        print(train_label[i])
+    for i in range(10, 30):
+        predict(X_train_np[i], model)
+        print(Y_train_np_new[i])
