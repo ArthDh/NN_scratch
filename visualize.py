@@ -16,6 +16,15 @@ done = False
 NIGHT_GRAY = (104, 98, 115)
 ORANGE = (255, 125, 0)
 
+def create_network(sp=60, n_nodes=[1]):
+    x = 60
+    for i in range(len(n_nodes)):
+        if i == len(n_nodes)-1:
+            create_layer(x, n_nodes[i], 0, x+2*sp)
+        else:
+            create_layer(x, n_nodes[i], n_nodes[i+1], x+2*sp)
+        x += 2*sp
+
 
 def create_circle(val, x, y):
     pygame.draw.circle(screen, (val, val, 0), (x, y), 15)
@@ -25,21 +34,30 @@ def create_link(val, startX, startY, endX, endY):
     pygame.draw.line(screen, val, [startX, startY], [endX, endY], 3)
 
 
-def create_layer(x_coords, n_nodes):
-    for i in range(n_nodes):
+def create_layer(x_coords, n_nodes_i, n_nodes_next, x_coords_next):
+    if n_nodes_next == 0:
+        for i in range(n_nodes_i):
+            create_circle(255, x_coords, 100 + 100 * i)
+        return
+    for i in range(n_nodes_i):
+        t = 0
+        for link in range(n_nodes_next):
+            create_link(NIGHT_GRAY, x_coords, 100 + 100 * i, x_coords_next, (100 + 100 * (t)))
+            t+=1
         create_circle(255, x_coords, 100 + 100 * i)
+        # Create links
+ 
 
 
-while not done:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
 
-    for i in range(255):
-        create_link(i, 30, 100, 90, 100)
-        create_link(i, 30, 100, 90, 200)
 
-    l1 = create_layer(30, 3)
-    l2 = create_layer(90, 4)
+if __name__ == '__main__':    
 
-    pygame.display.flip()
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
+        create_network(30, [5,5,5])
+
+        pygame.display.flip()

@@ -14,15 +14,13 @@ def d_sigmoid(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
 
-def train(X, y, lr=0.001, epochs=5000):
+def train(X, y, lr=0.1, epochs=1000):
 
     W_1 = np.random.random((X.shape[-1], n_hidden_units_1))
     b1 = np.zeros((n_hidden_units_1))
     W_2 = np.random.random((n_hidden_units_1, n_output_units))
     b2 = np.zeros((n_output_units))
-    lamda = 0.2
-
-    # print(W_1)
+    lamda = 0.0
 
     for epoch in range(epochs):
         for i, x in enumerate(X):
@@ -44,8 +42,8 @@ def train(X, y, lr=0.001, epochs=5000):
             grad_W_1 = np.dot(np.expand_dims(x, axis=1), grad_pre_1)
             grad_b1 = grad_pre_1.T
 
-            W_1 = np.subtract(W_1, lr * ((grad_W_1) - lamda * W_1))
-            W_2 = np.subtract(W_2, lr * ((grad_W_2) - lamda * W_2))
+            W_1 = np.subtract(W_1, lr * ((grad_W_1) + lamda * np.array([ x/abs(x) for x in W_1])))
+            W_2 = np.subtract(W_2, lr * ((grad_W_2) + lamda * np.array([x/abs(x) for x in W_2])))
             b1 = np.subtract(b1, np.reshape(grad_b1, (grad_b1.shape[0],)))
             b2 = np.subtract(b2, np.reshape(grad_b2, (grad_b2.shape[0],)))
 
@@ -55,6 +53,9 @@ def train(X, y, lr=0.001, epochs=5000):
 def predict(x, model):
 
     (W_1, W_2, b1, b2) = model
+
+    print(W_1)
+    print(W_2)
 
     res_1 = np.dot(W_1.T, x) + b1
     res_1_activation = sigmoid(res_1)
@@ -97,6 +98,7 @@ if __name__ == '__main__':
 
     model = train(train_X, train_label)
 
-    for i in range(4):
-        predict(train_X[i], model)
-        print(train_label[i])
+    # for i in range(4):
+    #     predict(train_X[i], model)
+    #     print(train_label[i])
+    predict([0.99, 0.1], model) 
