@@ -16,8 +16,15 @@ done = False
 NIGHT_GRAY = (104, 98, 115)
 ORANGE = (255, 125, 0)
 
-def create_network(sp=60, n_nodes=[1]):
-    x = 60
+def create_network(sp=100, n_nodes=[1]):
+    '''
+    INPUTS:
+    sp: Spacing between neurons
+    n_nodes: #nodes by layer
+    
+    '''
+
+    x = 200
     for i in range(len(n_nodes)):
         if i == len(n_nodes)-1:
             create_layer(x, n_nodes[i], 0, x+2*sp)
@@ -27,14 +34,31 @@ def create_network(sp=60, n_nodes=[1]):
 
 
 def create_circle(val, x, y):
+    '''
+    INPUTS:
+    val: Color
+    x, y: Position
+
+    '''
     pygame.draw.circle(screen, (val, val, 0), (x, y), 15)
 
 
 def create_link(val, startX, startY, endX, endY):
+    '''
+    INPUTS:
+    val: Color
+    startX, startY: Initial node position
+    endX, endY: Final node position
+
+    '''
     pygame.draw.line(screen, val, [startX, startY], [endX, endY], 3)
 
 
 def create_layer(x_coords, n_nodes_i, n_nodes_next, x_coords_next):
+    
+
+
+
     if n_nodes_next == 0:
         for i in range(n_nodes_i):
             create_circle(255, x_coords, 100 + 100 * i)
@@ -58,6 +82,6 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 done = True
 
-        create_network(30, [5,5,5])
+        create_network(100, [5,5,5])
 
         pygame.display.flip()
