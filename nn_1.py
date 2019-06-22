@@ -2,7 +2,7 @@ import numpy as np
 from preprocess import *
 np.random.seed(13)
 
-n_hidden_units_1 = 5
+n_hidden_units_1 = 7
 n_output_units = 2
 
 

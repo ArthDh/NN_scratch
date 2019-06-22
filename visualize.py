@@ -34,7 +34,7 @@ class Network_Viz:
     def get_screen(self):
         return self.screen
 
-    def create_network(self, sp=100, n_nodes=[1]):
+    def create_network(self, spx=100, spy= 100, n_nodes=[1]):
         '''
         INPUTS:
         sp: Spacing between neurons
@@ -45,10 +45,10 @@ class Network_Viz:
         x = 200
         for i in range(len(n_nodes)):
             if i == len(n_nodes)-1:
-                self.create_layer(x, n_nodes[i], 0, x+2*sp, i)
+                self.create_layer(x,spy,  n_nodes[i], 0, x+2*spx,i)
             else:
-                self.create_layer(x, n_nodes[i], n_nodes[i+1], x+2*sp, i)
-            x += 2*sp
+                self.create_layer(x,spy,  n_nodes[i], n_nodes[i+1], x+2*spx,i)
+            x += 2*spx
             
 
     def create_circle(self, val, x, y):
@@ -73,13 +73,13 @@ class Network_Viz:
 
 
 
-    def create_layer(self, x_coords, n_nodes_i, n_nodes_next, x_coords_next, Wi):
+    def create_layer(self, x_coords,spy,  n_nodes_i, n_nodes_next, x_coords_next, Wi):
 
         factor = 100
 
         if n_nodes_next == 0:
             for i in range(n_nodes_i):
-                self.create_circle(255, x_coords, 100 + 100 * i)
+                self.create_circle(255, x_coords, 100 + spy * i)
             return
 
         for i in range(n_nodes_i):
@@ -93,9 +93,9 @@ class Network_Viz:
                 else:
                     color = (np.abs(scaled_val)*factor, 0, 0)
 
-                self.create_link(color, x_coords, 100 + 100 * i, x_coords_next, (100 + 100 * (t)))
+                self.create_link(color, x_coords, 100 + spy * i, x_coords_next, (100 + spy * (t)))
                 t+=1
-            self.create_circle(255, x_coords, 100 + 100 * i)
+            self.create_circle(255, x_coords, 100 + spy * i)
             # Create links
      
 
