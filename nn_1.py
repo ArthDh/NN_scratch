@@ -2,7 +2,7 @@ import numpy as np
 from preprocess import *
 np.random.seed(13)
 
-n_hidden_units_1 = 10
+n_hidden_units_1 = 5
 n_output_units = 2
 
 
@@ -14,7 +14,7 @@ def d_sigmoid(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
 
-def train(X, y, lr=0.1, epochs=1000):
+def train(X, y, lr=0.1, epochs=10000):
 
     W_1 = np.random.random((X.shape[-1], n_hidden_units_1))
     b1 = np.zeros((n_hidden_units_1))
@@ -48,6 +48,9 @@ def train(X, y, lr=0.1, epochs=1000):
             b2 = np.subtract(b2, np.reshape(grad_b2, (grad_b2.shape[0],)))
 
     return (W_1, W_2, b1, b2)
+
+def calc_max_val(model):
+    return np.max([np.max(model[0]), np.max(model[1])])
 
 
 def predict(x, model):
@@ -97,6 +100,8 @@ if __name__ == '__main__':
     #         Y_train_np_new.append(np.array([1, 0]))
 
     model = train(train_X, train_label)
+
+    print(model[0].shape)
 
     # for i in range(4):
     #     predict(train_X[i], model)
